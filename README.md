@@ -150,7 +150,7 @@ curl -I  https://${DOMAIN}${BASE_PATH}/
 
 ---
 
-## 🌐 Reverse Proxy Examples (nginx / Plesk)
+## 🔁 Reverse Proxy Examples (nginx / Plesk)
 
 **UI on `https://<domain>/<base_path>/`**
 
