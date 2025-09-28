@@ -198,7 +198,7 @@ Run `./deploy.sh -h` for all commands & flags.
 
 ---
 
-## 🔬 Testing & CI
+## ✅ Testing & CI
 
 - **Backend**: add `pytest` tests under `backend/tests/`, run in CI.
 - **Linters/Typecheck**: use `ruff` + `mypy` for Python, ESLint + TS for frontend.
