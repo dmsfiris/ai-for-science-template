@@ -1,0 +1,27 @@
+services:
+  backend:
+    restart: unless-stopped
+    environment:
+      - ENV=prod
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=sqlite+aiosqlite:///./app.db
+      - API_ROOT_PATH=/ai-for-science
+    networks: [ internal ]
+
+  frontend:
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=https://api.${DOMAIN}/ai-for-science
+    networks: [ internal ]
+
+  redis:
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks: [ internal ]
+
+networks:
+  internal:
+
+volumes:
+  redis-data:

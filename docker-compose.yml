@@ -1,0 +1,58 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks: [internal]
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      - ENV=prod
+      - REDIS_URL=redis://redis:6379/0
+      # Persist SQLite inside a named volume (swap to Azure SQL later)
+      - DATABASE_URL=sqlite+aiosqlite:////data/app.db
+      # Serve API under a path prefix so it works at /ai-for-science
+      - API_ROOT_PATH=/ai-for-science
+    volumes:
+      - backend-data:/data
+    depends_on:
+      - redis
+    networks: [internal]
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BASE_PATH: /ai-for-science
+        # Build-time var so Next.js bakes the correct URL into the client bundle
+        NEXT_PUBLIC_API_URL: https://api.${DOMAIN}/ai-for-science
+    environment:
+      # Runtime var (harmless to keep; SSR can read it too)
+      - NEXT_PUBLIC_API_URL=https://api.${DOMAIN}/ai-for-science
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks: [internal]
+
+  # Optional: Azure SQL Edge (prefer real Azure SQL in later steps)
+  # azuresql:
+  #   image: mcr.microsoft.com/azure-sql-edge:latest
+  #   environment:
+  #     - ACCEPT_EULA=1
+  #     - MSSQL_SA_PASSWORD=Your_password123
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 2g
+  #   networks: [internal]
+
+networks:
+  internal:
+
+volumes:
+  redis-data:
+  backend-data:
+

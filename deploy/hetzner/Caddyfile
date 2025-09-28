@@ -1,0 +1,26 @@
+{
+  email {EMAIL}
+  # Optional: increase timeouts for LLM calls
+  servers {
+    read_timeout 30s
+    write_timeout 30s
+  }
+}
+
+{DOMAIN} {
+  encode gzip
+  @static path /_next/* /assets/* /favicon.ico
+  handle @static {
+    reverse_proxy frontend:3000
+  }
+  handle {
+    reverse_proxy frontend:3000
+  }
+}
+
+api.{DOMAIN} {
+  encode gzip
+  handle {
+    reverse_proxy backend:8000
+  }
+}
