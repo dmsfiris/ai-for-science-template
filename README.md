@@ -251,7 +251,7 @@ You’re free to use it in commercial and open-source projects, modify it, and r
 See [`LICENSE`](./LICENSE) for the full text.
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Issues and PRs are welcome. This project aims to stay small, production-minded, and easy to extend.
 
