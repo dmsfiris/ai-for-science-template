@@ -1,17 +1,17 @@
 # AI for Science — Full‑Stack Template (FastAPI + Next.js + Docker)
 
-A production‑ready template for building AI‑powered research/education tools. It pairs **FastAPI** (Python) with **Next.js 15 (React 18)**, ships with **Docker Compose**, and is engineered to sit cleanly behind a reverse proxy (e.g., **Plesk/nginx**, Caddy, Traefik).
+A production-ready template for building AI-powered research/education tools. It pairs **FastAPI** (Python) with **Next.js 15 (React 18)**, ships with **Docker Compose**, and is engineered to sit cleanly behind a reverse proxy (e.g., Plesk/nginx, Caddy, Traefik).
 
 ---
 
-## ✨ Highlights
+## ⭐ Highlights
 
 - **FastAPI** backend with sensible defaults (timeouts, JSON errors, Redis)
-- **Next.js 15** frontend, basePath‑aware to run under a subpath (e.g. `/ai-for-science`)
-- **Docker Compose** with a clean **base** and **override** split (portable + host‑specific)
-- Loopback‑only ports (`127.0.0.1`) → safe by default; reverse proxy terminates TLS
-- Path‑based routing for both UI and API
-- Flexible `deploy.sh` helper for CLI‑first ops
+- **Next.js 15** frontend, basePath-aware to run under a subpath (e.g. `/ai-for-science`)
+- **Docker Compose** with a clean base + override split (portable + host-specific)
+- Loopback-only ports (`127.0.0.1`) → safe by default; reverse proxy terminates TLS
+- Path-based routing for both UI and API
+- Flexible `deploy.sh` helper for CLI-first ops
 - Ready for CI (Actions), Dependabot, and docs
 
 ---
@@ -37,7 +37,7 @@ ai-for-science-template/
 
 ---
 
-## 🧭 Naming & Initialization
+## 📝 Naming & Initialization
 
 This repo ships as **`ai-for-science-template`**. After you create your own repo from it, we recommend renaming the folder to **`ai-for-science`** for clarity.
 
@@ -57,15 +57,15 @@ COMPOSE_PROJECT_NAME=ai-for-science
 
 ---
 
-## 🔧 Requirements
+## ⚙️ Requirements
 
 - Docker Engine + Docker Compose plugin (v2+)
-- Node.js 20 (for local non‑Docker builds) — optional
-- Python 3.11+ (for local non‑Docker runs) — optional
+- Node.js 20 (for local non-Docker builds) — optional
+- Python 3.11+ (for local non-Docker runs) — optional
 
 ---
 
-## ⚙️ Configuration
+## 🔧 Configuration
 
 Copy the sample env and edit the values:
 
@@ -95,18 +95,18 @@ COMPOSE_PROJECT_NAME=ai-for-science
 
 ## 🐳 Compose Files (Why two?)
 
-- **`docker-compose.yml`** — Portable **base**: services, networks, volumes, env. **No host ports** exposed.
-- **`docker-compose.override.yml`** — Host‑specific **override**: loopback port bindings for reverse proxy.
+- **`docker-compose.yml`** — Portable base: services, networks, volumes, env. **No host ports** exposed.
+- **`docker-compose.override.yml`** — Host-specific override: loopback port bindings for reverse proxy.
 
-This split keeps the base safe and reusable across environments; the override captures only machine‑specific tweaks.
+This split keeps the base safe and reusable across environments; the override captures only machine-specific tweaks.
 
-To run with both (recommended):
+Run with both (recommended):
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --build
 ```
 
-To generate a flattened snapshot:
+Generate a flattened snapshot:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.override.yml config > docker-compose.final.yml
@@ -150,7 +150,7 @@ curl -I  https://${DOMAIN}${BASE_PATH}/
 
 ---
 
-## 🧩 Reverse Proxy Examples (nginx / Plesk)
+## 🌐 Reverse Proxy Examples (nginx / Plesk)
 
 **UI on `https://<domain>/<base_path>/`**
 
@@ -177,13 +177,13 @@ location ^~ /<base_path>/ {
 }
 ```
 
-> Issue TLS certificates (e.g., Let’s Encrypt) for both domains. Ensure container ports are **loopback‑only** (as in the override) so nothing is publicly exposed.
+> Issue TLS certificates (e.g., Let’s Encrypt) for both domains. Ensure container ports are loopback-only (as in the override) so nothing is publicly exposed.
 
 ---
 
-## 🛠️ `deploy.sh` — Flexible CLI Helper
+## 🔧 `deploy.sh` — Flexible CLI Helper
 
-A small wrapper to simplify common operations. Examples:
+Examples:
 
 ```bash
 ./deploy.sh up --build                    # start or redeploy all
@@ -194,14 +194,14 @@ A small wrapper to simplify common operations. Examples:
 ./deploy.sh prune images                  # safe cleanup of unused images
 ```
 
-Use `./deploy.sh -h` for all commands & flags.
+Run `./deploy.sh -h` for all commands & flags.
 
 ---
 
-## 🧪 Testing & CI
+## 🔬 Testing & CI
 
 - **Backend**: add `pytest` tests under `backend/tests/`, run in CI.
-- **Linters/Typecheck**: recommended `ruff` + `mypy` for Python, ESLint + TS for frontend.
+- **Linters/Typecheck**: use `ruff` + `mypy` for Python, ESLint + TS for frontend.
 - **GitHub Actions**: see `.github/workflows/ci.yml` example to build/test on PRs.
 
 ---
@@ -214,7 +214,7 @@ Use `./deploy.sh -h` for all commands & flags.
 
 ---
 
-## 🧱 Architecture (at a glance)
+## Architecture (at a glance)
 
 ```
 [ Browser ]
@@ -230,33 +230,32 @@ Use `./deploy.sh -h` for all commands & flags.
 
 ---
 
-## 🩺 Troubleshooting
+## ❗ Troubleshooting
 
 - **404 at `/<base_path>`** → Rebuild frontend with the correct `BASE_PATH`:
   ```bash
   docker compose -f docker-compose.yml -f docker-compose.override.yml build --no-cache frontend
   docker compose -f docker-compose.yml -f docker-compose.override.yml up -d frontend
   ```
-- **Loop between `/<base_path>` and `/<base_path>/`** → Add nginx exact redirect (no‑slash → slash) **or** set `trailingSlash: true` in `next.config.ts` and rebuild.
+- **Loop between `/<base_path>` and `/<base_path>/`** → Add nginx exact redirect (no-slash → slash) or set `trailingSlash: true` in `next.config.ts` and rebuild.
 - **Public API 404/502** → Check proxy rule on `api.<domain>` points to `127.0.0.1:8001` under `/<base_path>/`.
-- **Frontend using wrong API URL** → `NEXT_PUBLIC_API_URL` must be correct at **build time**; rebuild frontend.
+- **Frontend using wrong API URL** → `NEXT_PUBLIC_API_URL` must be correct at build time; rebuild frontend.
 
 ---
 
 ## 📜 License
 
-Choose a license that fits your goals:
-- **MIT** — simple & permissive
-- **Apache‑2.0** — includes explicit patent license
+This template is released under the **MIT License** — simple and permissive.  
+You’re free to use it in commercial and open-source projects, modify it, and redistribute it with attribution.
 
-Add `LICENSE` accordingly.
-
+See [`LICENSE`](./LICENSE) for the full text.
 ---
 
 ## 🤝 Contributing
 
-Issues and PRs are welcome. Please keep the template focused: small, production‑minded primitives that are easy to extend.
+Issues and PRs are welcome. This project aims to stay small, production-minded, and easy to extend.
 
----
-
-_Last updated: 2025-09-28_
+### How to contribute
+**Fork** the repo and **create a branch**:
+   ```bash
+   git checkout -b feat/<short-title>   # or fix/<short-title>, chore/<short-title>
